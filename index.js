@@ -11,13 +11,13 @@ const database = new pg.Client({
 
 database.connect();
 
-database.query('SELECT fullname FROM test;', (err, res) => {
+/*database.query('SELECT fullname FROM test;', (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
     database.end();
-  });
+});*/
 
 const express = require('express');
 var app = express();
