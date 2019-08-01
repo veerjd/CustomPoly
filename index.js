@@ -1,7 +1,23 @@
 require('dotenv').config();
 const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
+const pg = require('pg');
 const http = require("http");
+
+const database = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+});
+
+database.connect();
+
+database.query('SELECT fullname FROM test;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    database.end();
+  });
 
 const express = require('express');
 var app = express();
