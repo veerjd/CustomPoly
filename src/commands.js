@@ -1,12 +1,13 @@
 const { Pool, Client } = require('pg')
-const http = require("http");
+const connectionString = process.env.DATABASE_URL
+const pool = new Pool({
+  connectionString: connectionString,
+})
 
-const database = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
-(async () => {
-  database.connect().catch(console.error);
-})();
+const client = new Client({
+  connectionString: connectionString,
+})
+client.connect()
 
 function setcode(discordID, discordName, code) {
     console.log(discordID, discordName, code)
@@ -22,13 +23,13 @@ function setcode(discordID, discordName, code) {
             console.error(e)
         })
         .catch(console.error)*/
-    database.query(text, values, (err, res) => {
+    client.query(text, values, (err, res) => {
         if (err) {
             console.log(err.stack)
-            database.end()
+            client.end()
         } else {
             console.log(res.rows[0])
-            database.end()
+            client.end()
         }
     })
     
