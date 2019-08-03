@@ -31,6 +31,16 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
 
+    if(message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
+        return;
+
+//--------------------------------------------
+//             COMMAND HANDLER
+//--------------------------------------------
+    let cmd = message.content.toLowerCase().slice(prefix.length).split(/ +/, 1).toString();
+    console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
+    let args;
+
 })
 
 //--------------------------------------
