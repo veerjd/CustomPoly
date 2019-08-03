@@ -3,20 +3,10 @@ const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const pg = require('pg');
 const http = require("http");
+const {setcode, setname} = require("./src/commands");
 
-const database = new pg.Client({
+/*const database = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: true,
-});
-
-database.connect();
-
-/*database.query('SELECT fullname FROM test;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
-    }
-    database.end();
 });*/
 
 const express = require('express');
@@ -30,6 +20,7 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
+    const prefix = process.env.PREFIX;
 
     if(message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
         return;
@@ -39,8 +30,12 @@ bot.on('message', message => {
 //--------------------------------------------
     let cmd = message.content.toLowerCase().slice(prefix.length).split(/ +/, 1).toString();
     console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
-    let args;
+    let args = message.content.toLowerCase().slice(prefix.length+cmd.length+1).split(/ +/);
+    console.log("args:", args)
 
+    if (cmd === "setcode") {
+        setcode(message.author.id, message.author.username, args[0])
+    }
 })
 
 //--------------------------------------
