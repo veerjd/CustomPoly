@@ -3,7 +3,7 @@ const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const pg = require('pg');
 const http = require("http");
-const {setcode, setname} = require("./src/commands");
+const { setcode, setname } = require("./src/commands");
 
 /*const database = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
@@ -30,11 +30,27 @@ bot.on('message', message => {
 //--------------------------------------------
     let cmd = message.content.toLowerCase().slice(prefix.length).split(/ +/, 1).toString();
     console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
-    let args = message.content.toLowerCase().slice(prefix.length+cmd.length+1).split(/ +/);
+    let args = message.content.slice(prefix.length+cmd.length+1).split(/ +/);
     console.log("args:", args)
 
     if (cmd === "setcode") {
-        setcode(message.author.id, message.author.username, args[0])
+        if(args.length === 1) {
+            setcode(message.author.id, message.author.username, args[0])
+                .then(x => message.channel.send(x))
+        } else if (args.length === 2) {
+            let id
+            let username
+            if(message.mentions.members.first()) {
+                id = message.mentions.members.firstKey()
+                username = message.mentions.members.first().user.username
+            } else {
+                member = message.guild.members.find(x => x.user.username.includes(args[0]))
+                id = member.id
+                username = member.user.username
+            }
+            setcode(id, username, args[args.length - 1])
+                .then(x => message.channel.send(x))
+        }
     }
 })
 
