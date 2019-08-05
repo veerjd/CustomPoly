@@ -8,13 +8,12 @@ const pool = new Pool({
 
 function setcode(discordID, discordName, code) {
     return new Promise((resolve, reject) => {
-        console.log(discordID, discordName, code)
         const verify = 'SELECT discord_id FROM players_test WHERE discord_id=$1'
         const valverify = [discordID];
 
         pool.query(verify, valverify, (err, res) => {
             if(err) {
-                console.error('Error executing query', err.message)
+                console.error('ERROR:', err.message)
                 resolve(`${err.message}. Ping an @**admin** if you need help!`)
             } else {
                 console.log('Any record with that discord id?:', res.rowCount)
@@ -24,10 +23,10 @@ function setcode(discordID, discordName, code) {
                     pool.query(text, values, (err, result) => {
                         //console.log('result:', result)
                         if (err) {
-                            console.error('Error executing query', err.message)
+                            console.error('ERROR:', err.message)
                             resolve(`${err.message}. Ping an @**admin** if you need help!`)
                         } else {
-                            let resolveMsg = `Player ${discordName} updated in system with Polytopia code \`${code}\`.`
+                            let resolveMsg = `Player **${discordName}** updated in system with Polytopia code: \`${code}\`.`
                             //console.log('result:', result)
                             //if (result.rows[0].poly_name === undefined)
                             //    resolveMsg = resolveMsg + `\nYou can set your Polytopia name using the \`${process.env.PREFIX}setname\` command`
@@ -41,10 +40,10 @@ function setcode(discordID, discordName, code) {
                     const values = [discordID, discordName, code]
                     pool.query(text, values, (err, result) => {
                         if (err) {
-                            console.error('Error executing query', err.message)
+                            console.error('ERROR:', err.message)
                             resolve(`${err.message}. Ping an @**admin** if you need help!`)
                         } else {
-                            let resolveMsg = `Player ${discordName} created in system with Polytopia code \`${code}\`.`
+                            let resolveMsg = `Player **${discordName}** created in system with Polytopia code: \`${code}\`.`
 
                             //console.log('result:', result)
                             //if (result.rows[0].poly_name === undefined)
@@ -62,4 +61,23 @@ function setname() {
     
 }
 
-module.exports = {setcode, setname}
+function code(discordID, username) {
+    return new Promise((resolve, reject) => {
+        let resolveMsg = [];
+        const text = 'SELECT poly_code FROM players_test WHERE discord_id = $1'
+        const value = [discordID]
+
+        pool.query(text, value, (err, result) => {
+            if(err) {
+                console.error('ERROR:', err.message)
+                resolve(`${err.message}. Ping an @**admin** if you need help!`)
+            } else {
+                resolveMsg[0] = `Here is **${username}**'s code for you to copy:`
+                resolveMsg[1] = result.rows[0].poly_code;
+                resolve(resolveMsg)
+            }
+        })
+    })
+}
+
+module.exports = {setcode, setname, code}

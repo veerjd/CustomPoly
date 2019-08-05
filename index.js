@@ -3,7 +3,7 @@ const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const pg = require('pg');
 const http = require("http");
-const { setcode, setname } = require("./src/commands");
+const { setcode, setname, code } = require("./src/commands");
 
 /*const database = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
@@ -50,6 +50,29 @@ bot.on('message', message => {
             }
             setcode(id, username, args[args.length - 1])
                 .then(x => message.channel.send(x))
+        }
+    }
+    if (cmd === "code") {
+        if(args.length === 0) {
+            code(message.author.id, message.author.username)
+                .then(x => message.channel.send(x))
+        } else if (args.length === 1) {
+            let id
+            let username
+            if(message.mentions.members.first()) {
+                id = message.mentions.members.firstKey()
+                username = message.mentions.members.first().user.username
+            } else {
+                member = message.guild.members.find(x => x.user.username.includes(args[0]))
+                if(member === null)
+                    return message.channel.send(`We couldn't find player **${args[0]}** ¯\\\_(ツ)_/¯`)
+                else {
+                    id = member.id
+                    username = member.user.username
+                }
+            }
+            code(id, username)
+                .then(x => x.forEach(x => message.channel.send(x)))
         }
     }
 })
