@@ -1,6 +1,7 @@
 const { Pool } = require('pg')
 const connectionString = process.env.DATABASE_URL
 const prefix = process.env.PREFIX
+const modes = require('./modes')
 
 const pool = new Pool({
     connectionString: connectionString,

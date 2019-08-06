@@ -3,7 +3,8 @@ const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const https = require("https");
 const { setcode, code, setname, open, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
-const util = require("./src/util")
+const restrictions = require("./src/restrictions")
+const permissions = require("./src/permissions")
 
 const express = require('express');
 var app = express();
@@ -61,7 +62,7 @@ bot.on('message', message => {
             code(message.author)
                 .then(x => {
                     console.log(x)
-                    message.channel.send(x)
+                    x.forEach(x => message.channel.send(x))
                 })
         } else {
             if(message.mentions.members.first()) {
@@ -82,10 +83,14 @@ bot.on('message', message => {
         }
     }
 //--------------------------------------------
-//                 SETCODE
+//                  OPEN
 //--------------------------------------------
     if (cmd === "open") {
-        
+        open(arg[0])
+            .then(x => {
+                console.log(x)
+                x.forEach(x => message.channel.send(x))
+            })
     }
 })
 
