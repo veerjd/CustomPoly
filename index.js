@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const https = require("https");
-const { setcode, code, setname, open, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
+const { setcode, code, setname, open, test, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
 const restrictions = require("./src/restrictions")
 const permissions = require("./src/permissions")
 
@@ -26,7 +26,7 @@ bot.on('message', message => {
 //             COMMAND HANDLER
 //--------------------------------------------
     let cmd = message.content.toLowerCase().slice(prefix.length).split(/ +/, 1).toString();
-    console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
+    console.log(`${message.cleanContent} in #${message.channel.name} by ${message.author.tag}`);
     let args = message.content.slice(prefix.length+cmd.length+1).split(/ +/);
 
 //--------------------------------------------
@@ -58,7 +58,6 @@ bot.on('message', message => {
 //--------------------------------------------
     if (cmd === "code") {
         if(args[0] === '') {
-            console.log("message.author:", message.author)
             code(message.author)
                 .then(x => {
                     console.log(x)
@@ -86,7 +85,18 @@ bot.on('message', message => {
 //                  OPEN
 //--------------------------------------------
     if (cmd === "open") {
-        open(arg[0])
+        open(message.author, args[0])
+            .then(x => {
+                console.log(x)
+                x.forEach(x => message.channel.send(x))
+            })
+    }
+//--------------------------------------------
+//                  TEST
+//--------------------------------------------
+    console.log(cmd, args)
+    if (cmd === "test") {
+        test(message.author, args[0])
             .then(x => {
                 console.log(x)
                 x.forEach(x => message.channel.send(x))

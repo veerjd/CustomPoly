@@ -83,7 +83,30 @@ function code(user) {
 
 function setname() {}
 
-function open(gametype) {}
+function open(hostUser, gametype) {
+    return new Promise((resolve, reject) => {
+        /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
+        const values = [discordUser.id, discordUser.username, code]*/
+        resolve("Yay")
+    })
+}
+
+function test(hostUser, gametype) {
+    return new Promise((resolve, reject) => {
+        resolveMsg = []
+        modesTesting = Object.keys(modes.testing)
+        thismode = modesTesting.find(key => key.includes(gametype))
+        if (thismode === undefined) {
+            resolveMsg.push("You tried to open a game for a mode that doesn't exist *(yet?)*.")
+        } else {
+            resolveMsg.push("We opened game #1 for you.")
+        }
+        /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
+        const values = [discordUser.id, discordUser.username, code]*/
+
+        resolve(resolveMsg)
+    })
+}
 
 function games() {}
 
@@ -107,4 +130,4 @@ function allgames(player, gameName) {}
 
 function help(command) {}
 
-module.exports = { setcode, setname, code, open, games, join, leave, deleteGame, start, win, incomplete, complete, game, allgames, help }
+module.exports = { setcode, setname, code, open, test, games, join, leave, deleteGame, start, win, incomplete, complete, game, allgames, help }
