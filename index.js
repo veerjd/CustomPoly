@@ -42,7 +42,7 @@ bot.on('message', message => {
             if(message.mentions.members.first())
                 user = message.mentions.members.first().user.username
             else {
-                member = message.guild.members.find(x => x.user.username.includes(args[0]))
+                member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
                 user = member.user
             }
             setcode(user, args[args.length - 1])
