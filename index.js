@@ -35,7 +35,7 @@ bot.on('message', message => {
 
     if (cmd === "setcode") {
         if(args.length === 1) {
-            setcode(message.author.id, message.author.username, args[0])
+            setcode(message.author.id, message.author.username.toLowerCase(), args[0])
                 .then(x => message.channel.send(x))
         } else if (args.length === 2) {
             let id
@@ -54,7 +54,7 @@ bot.on('message', message => {
     }
     if (cmd === "code") {
         if(args.length === 0) {
-            code(message.author.id, message.author.username)
+            code(message.author.id, message.author.username.toLowerCase())
                 .then(x => message.channel.send(x))
         } else if (args.length === 1) {
             let id
