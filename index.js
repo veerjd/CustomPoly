@@ -85,7 +85,7 @@ bot.on('message', message => {
 //                  OPEN
 //--------------------------------------------
     if (cmd === "open") {
-        open(message.author, args[0])
+        open(message.author, args[0].toLowerCase())
             .then(x => {
                 console.log(x)
                 x.forEach(x => message.channel.send(x))
@@ -94,9 +94,8 @@ bot.on('message', message => {
 //--------------------------------------------
 //                  TEST
 //--------------------------------------------
-    console.log(cmd, args)
     if (cmd === "test") {
-        test(message.author, args[0])
+        test(message.author, args[0].toLowerCase())
             .then(x => {
                 console.log(x)
                 x.forEach(x => message.channel.send(x))
