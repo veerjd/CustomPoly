@@ -1,13 +1,8 @@
 require('dotenv').config();
 const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
-const pg = require('pg');
-const http = require("http");
-const { setcode, setname, code } = require("./src/commands");
-
-/*const database = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-});*/
+const https = require("https");
+const { setcode, setname, code, open, games, start, win,  } = require("./src/commands");
 
 const express = require('express');
 var app = express();
@@ -32,10 +27,16 @@ bot.on('message', message => {
     console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
     let args = message.content.slice(prefix.length+cmd.length+1).split(/ +/);
 
+//--------------------------------------------
+//                 SETCODE
+//--------------------------------------------
     if (cmd === "setcode") {
         if(args.length === 1) {
             setcode(message.author.id, message.author.username.toLowerCase(), args[0])
-                .then(x => message.channel.send(x))
+                .then(x => {
+                    console.log(x)
+                    message.channel.send(x)
+                })
         } else if (args.length === 2) {
             let id
             let username
@@ -48,14 +49,23 @@ bot.on('message', message => {
                 username = member.user.username
             }
             setcode(id, username, args[args.length - 1])
-                .then(x => message.channel.send(x))
+                .then(x => {
+                    console.log(x)
+                    message.channel.send(x)
+                })
         }
     }
+//--------------------------------------------
+//                 CODE
+//--------------------------------------------
     if (cmd === "code") {
         if(args[0] === '') {
             console.log("message.author:", message.author)
             code(message.author)
-                .then(x => message.channel.send(x))
+                .then(x => {
+                    console.log(x)
+                    message.channel.send(x)
+                })
         } else {
             if(message.mentions.members.first()) {
                 id = message.mentions.members.firstKey()
@@ -68,8 +78,17 @@ bot.on('message', message => {
                     user = member.user
             }
             code(user)
-                .then(x => x.forEach(x => message.channel.send(x)))
+                .then(x => {
+                    console.log(x)
+                    x.forEach(x => message.channel.send(x))
+                })
         }
+    }
+//--------------------------------------------
+//                 SETCODE
+//--------------------------------------------
+    if (cmd === "open") {
+        
     }
 })
 
@@ -79,7 +98,7 @@ bot.on('message', message => {
 const port = process.env.PORT || 5000;
 
 /*setInterval(function() {
-    http.get("http://custompoly.herokuapp.com");
+    https.get("https://custompoly.herokuapp.com");
 }, 300000); // every 5 minutes (300000)*/
 
 app.get('/', function (req, res) {
