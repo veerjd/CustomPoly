@@ -33,23 +33,19 @@ bot.on('message', message => {
 //--------------------------------------------
     if (cmd === "setcode") {
         if(args.length === 1) {
-            setcode(message.author.id, message.author.username.toLowerCase(), args[0])
+            setcode(message.author, args[0])
                 .then(x => {
                     console.log(x)
                     message.channel.send(x)
                 })
         } else if (args.length === 2) {
-            let id
-            let username
-            if(message.mentions.members.first()) {
-                id = message.mentions.members.firstKey()
-                username = message.mentions.members.first().user.username
-            } else {
+            if(message.mentions.members.first())
+                user = message.mentions.members.first().user.username
+            else {
                 member = message.guild.members.find(x => x.user.username.includes(args[0]))
-                id = member.id
-                username = member.user.username
+                user = member.user.user
             }
-            setcode(id, username, args[args.length - 1])
+            setcode(user, args[args.length - 1])
                 .then(x => {
                     console.log(x)
                     message.channel.send(x)
