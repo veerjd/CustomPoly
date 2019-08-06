@@ -58,10 +58,6 @@ function setcode(discordID, discordName, code) {
     })
 }
 
-function setname() {
-    
-}
-
 function code(user) {
     return new Promise((resolve, reject) => {
         let resolveMsg = [];
@@ -84,4 +80,30 @@ function code(user) {
     })
 }
 
-module.exports = {setcode, setname, code}
+function setname() {}
+
+function open(gametype) {}
+
+function games() {}
+
+function join(gameID) {}
+
+function leave(gameID) {}
+
+function delete() {}
+
+function start(gameID, gameName) {}
+
+function win(gameID, winner) {}
+
+function incomplete(player) {}
+
+function complete(player) {}
+
+function game(gameID) {}
+
+function allgames(player, gameName) {}
+
+function help(command) {}
+
+module.exports = { setcode, setname, code, open, games, join, leave, delete, start, win, incomplete, complete, game, allgames, help }

@@ -2,7 +2,8 @@ require('dotenv').config();
 const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const https = require("https");
-const { setcode, setname, code, open, games, start, win,  } = require("./src/commands");
+const { setcode, code, setname, open, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
+const util = require("./src/util")
 
 const express = require('express');
 var app = express();
