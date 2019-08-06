@@ -40,7 +40,7 @@ bot.on('message', message => {
                 })
         } else if (args.length === 2) {
             if(message.mentions.members.first())
-                user = message.mentions.members.first().user.username
+                user = message.mentions.members.first().user
             else {
                 member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
                 user = member.user
