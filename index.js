@@ -31,7 +31,6 @@ bot.on('message', message => {
     let cmd = message.content.toLowerCase().slice(prefix.length).split(/ +/, 1).toString();
     console.log(`${message.cleanContent} in ${message.guild.name.toUpperCase()} in #${message.channel.name} by ${message.author.tag}`);
     let args = message.content.slice(prefix.length+cmd.length+1).split(/ +/);
-    console.log("args:", args)
 
     if (cmd === "setcode") {
         if(args.length === 1) {
@@ -53,9 +52,6 @@ bot.on('message', message => {
         }
     }
     if (cmd === "code") {
-        console.log("message.author:", message.author.username)
-        console.log("args:", args)
-        console.log("args.length:", args.length)
         if(args[0] === '') {
             console.log("message.author:", message.author)
             code(message.author)
