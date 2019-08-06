@@ -43,7 +43,7 @@ bot.on('message', message => {
                 user = message.mentions.members.first().user.username
             else {
                 member = message.guild.members.find(x => x.user.username.includes(args[0]))
-                user = member.user.user
+                user = member.user
             }
             setcode(user, args[args.length - 1])
                 .then(x => {
