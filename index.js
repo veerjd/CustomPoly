@@ -53,25 +53,25 @@ bot.on('message', message => {
         }
     }
     if (cmd === "code") {
-        if(args.length === 0) {
-            code(message.author.id, message.author.username.toLowerCase())
+        console.log("message.author:", message.author.username)
+        console.log("args:", args)
+        console.log("args.length:", args.length)
+        if(args[0] === '') {
+            console.log("message.author:", message.author)
+            code(message.author)
                 .then(x => message.channel.send(x))
-        } else if (args.length === 1) {
-            let id
-            let username
+        } else {
             if(message.mentions.members.first()) {
                 id = message.mentions.members.firstKey()
-                username = message.mentions.members.first().user.username
+                user = message.mentions.members.first().user
             } else {
-                member = message.guild.members.find(x => x.user.username.includes(args[0]))
+                member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
                 if(member === null)
                     return message.channel.send(`We couldn't find player **${args[0]}** ¯\\\_(ツ)_/¯`)
-                else {
-                    id = member.id
-                    username = member.user.username
-                }
+                else
+                    user = member.user
             }
-            code(id, username)
+            code(user)
                 .then(x => x.forEach(x => message.channel.send(x)))
         }
     }

@@ -1,5 +1,6 @@
 const { Pool } = require('pg')
 const connectionString = process.env.DATABASE_URL
+const prefix = process.env.PREFIX
 
 const pool = new Pool({
     connectionString: connectionString,
@@ -61,19 +62,22 @@ function setname() {
     
 }
 
-function code(discordID, username) {
+function code(user) {
     return new Promise((resolve, reject) => {
         let resolveMsg = [];
         const text = 'SELECT poly_code FROM players_test WHERE discord_id = $1'
-        const value = [discordID]
-
+        const value = [user.id]
         pool.query(text, value, (err, result) => {
             if(err) {
                 console.error('ERROR:', err.message)
                 resolve(`${err.message}. Ping an @**admin** if you need help!`)
             } else {
-                resolveMsg[0] = `Here is **${username}**'s code for you to copy:`
-                resolveMsg[1] = result.rows[0].poly_code;
+                if(result.rows[0] === undefined)
+                    resolveMsg[0] = `We found **${user.username}**, but his code isn't in our books. Have them use \`${prefix}setcode\`!`
+                else {
+                    resolveMsg[0] = `Here is **${user.username}**'s code for you to copy:`
+                    resolveMsg[1] = result.rows[0].poly_code;
+                }
                 resolve(resolveMsg)
             }
         })
