@@ -3,8 +3,7 @@ const { Client, RichEmbed } = require('discord.js');
 const bot = new Client();
 const https = require("https");
 const { setcode, code, setname, open, test, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
-const restrictions = require("./src/restrictions")
-const permissions = require("./src/permissions")
+const { unallowedChannel, canDo } = require("./src/permissions")
 
 const express = require('express');
 var app = express();
@@ -21,6 +20,13 @@ bot.on('message', message => {
 
     if(message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
         return;
+
+    if(unallowedChannel(message.channel.name))
+        return message.channel.send(`You shouldn't use me in this channel...`)
+            .then(x => {
+                x.delete(10000)
+                message.delete(10000)
+            })
 
 //--------------------------------------------
 //             COMMAND HANDLER
@@ -40,16 +46,23 @@ bot.on('message', message => {
                     message.channel.send(x)
                 })
         } else if (args.length === 2) {
-            if(message.mentions.members.first())
-                user = message.mentions.members.first().user
-            else {
-                member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
-                user = member.user
-            }
-            setcode(user, args[args.length - 1])
-                .then(x => {
-                    console.log(x)
-                    message.channel.send(x)
+            canDo()
+                .then(() => {
+                    if(message.mentions.members.first())
+                        user = message.mentions.members.first().user
+                    else {
+                        member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                        user = member.user
+                    }
+                    setcode(user, args[args.length - 1])
+                        .then(x => {
+                            console.log(x)
+                            message.channel.send(x)
+                        })
+                })
+                .catch(reselveMsg => {
+                    console.log(reselveMsg)
+                    message.channel.send(reselveMsg)
                 })
         }
     }

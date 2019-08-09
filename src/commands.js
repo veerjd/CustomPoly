@@ -7,7 +7,9 @@ const pool = new Pool({
     connectionString: connectionString,
     ssl: true,
 })
-
+//--------------------------------------------
+//                 SETCODE
+//--------------------------------------------
 function setcode(discordUser, code) {
     return new Promise((resolve, reject) => {
         const verify = 'SELECT discord_id FROM players_test WHERE discord_id=$1'
@@ -58,7 +60,9 @@ function setcode(discordUser, code) {
         })
     })
 }
-
+//--------------------------------------------
+//                  CODE
+//--------------------------------------------
 function code(user) {
     return new Promise((resolve, reject) => {
         let resolveMsg = [];
@@ -80,9 +84,13 @@ function code(user) {
         })
     })
 }
-
+//--------------------------------------------
+//                 SETNAME
+//--------------------------------------------
 function setname() {}
-
+//--------------------------------------------
+//                  OPEN
+//--------------------------------------------
 function open(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
@@ -91,41 +99,46 @@ function open(hostUser, gametype) {
         if (thismode === undefined) {
             resolveMsg.push("You tried to open a game for a mode that doesn't exist *(yet?)*.")
         } else {
-            resolveMsg.push("We opened game #1 for you.")
+            /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
+            const values = [discordUser.id, discordUser.username, code]*/
+            resolveMsg.push(`We opened game #1 for you for the **${gametype}** game mode.`)
         }
-        /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
-        const values = [discordUser.id, discordUser.username, code]*/
 
         resolve(resolveMsg)
     })
 }
-
+//--------------------------------------------
+//                  TEST
+//--------------------------------------------
 function test(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesTesting = Object.keys(modes.testing)
         thismode = modesTesting.find(key => key.includes(gametype))
         if (thismode === undefined) {
-            resolveMsg.push("You tried to open a game for a mode that doesn't exist *(yet?)*.")
+            resolveMsg.push("You tried to open a test game for a mode that doesn't exist (*yet*?).")
         } else {
-            resolveMsg.push("We opened *test* game #1 for you.")
+            /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
+            const values = [discordUser.id, discordUser.username, code]*/
+
+            resolveMsg.push(`We opened test game #1 for you for the **${gametype}** game mode.`)
         }
-        /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
-        const values = [discordUser.id, discordUser.username, code]*/
 
         resolve(resolveMsg)
     })
 }
-
+//--------------------------------------------
+//                  GAME
+//--------------------------------------------
 function game(gameID) {}
 
-function games() {}
+function games(options) {}
 
 function join(gameID) {}
 
 function leave(gameID) {}
 
-function deleteGame() {}
+function deleteGame(gameID) {}
 
 function start(gameID, gameName) {}
 

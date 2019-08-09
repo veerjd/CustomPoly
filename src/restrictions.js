@@ -1,4 +1,0 @@
-/*const = restrictions {
-    staff: ,
-    helper
-}*/

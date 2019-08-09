@@ -1,9 +1,3 @@
-kingdom = {
-    name: "Kingdoms Rebels",
-    shortrules: "Two kingdoms of three players with a rebel player in each.",
-    wincondition: ""
-}
-
 diplomacy = {
     name: "FFA Diplomacy",
     shortrules: "",
@@ -18,4 +12,4 @@ werewolf = {
 
 module.exports.ongoing = {}
 
-module.exports.testing = {kingdom, diplomacy, werewolf}
+module.exports.testing = {diplomacy, werewolf}
