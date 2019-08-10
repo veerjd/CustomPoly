@@ -46,12 +46,13 @@ bot.on('message', message => {
                     message.channel.send(x)
                 })
         } else if (args.length === 2) {
-            canDo()
+            canDo(message.member, message.channel.name)
                 .then(() => {
                     if(message.mentions.members.first())
                         user = message.mentions.members.first().user
                     else {
                         member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                        console.log("member:", member.user.username)
                         user = member.user
                     }
                     setcode(user, args[args.length - 1])
@@ -60,9 +61,9 @@ bot.on('message', message => {
                             message.channel.send(x)
                         })
                 })
-                .catch(reselveMsg => {
-                    console.log(reselveMsg)
-                    message.channel.send(reselveMsg)
+                .catch(x => {
+                    console.log(x)
+                    message.channel.send(x)
                 })
         }
     }

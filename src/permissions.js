@@ -6,15 +6,22 @@ function unallowedChannel(channelName) {
     return channelStatus
 }
 
-function can(user, channelName) {
+function canDo(guildmember, channelName) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
+        let can
+
+        guildmember.roles.some(x => {
+            allowedRoles.forEach(role => {
+                return can = x.name === role
+            })
+        })
+
+        if(can)
+            resolve()
+        else
+            reject("You are not allowed to perform this command.")
     })
 }
 
-module.exports = { unallowedChannel, can }
-
-/*const = restrictions {
-    staff: ,
-    helper
-}*/
+module.exports = { unallowedChannel, canDo }
