@@ -115,6 +115,17 @@ bot.on('message', message => {
                 x.forEach(x => message.channel.send(x))
             })
     }
+//--------------------------------------------
+//                  GAME
+//--------------------------------------------
+    if (cmd === "game") {
+        richmsg = new RichEmbed()
+        game(args[0].toLowerCase(), richmsg)
+            .then(x => {
+                console.log(x)
+                message.channel.send(x)
+            })
+    }
 })
 
 //--------------------------------------
@@ -127,7 +138,7 @@ const port = process.env.PORT || 5000;
 }, 300000); // every 5 minutes (300000)*/
 
 app.get('/', function (req, res) {
-    res.send('Hello World!')
+    res.send('Hello Phil!')
 })
 
 app.listen(port, () => {

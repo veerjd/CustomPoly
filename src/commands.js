@@ -67,8 +67,8 @@ function code(user) {
     return new Promise((resolve, reject) => {
         let resolveMsg = [];
         const text = 'SELECT poly_code FROM players WHERE discord_id = $1'
-        const value = [user.id]
-        pool.query(text, value, (err, result) => {
+        const values = [user.id]
+        pool.query(text, values, (err, result) => {
             if(err) {
                 console.error('ERROR:', err.message)
                 resolve(`${err.message}. Ping an @**admin** if you need help!`)
@@ -146,7 +146,26 @@ function test(hostUser, gametype) {
 //--------------------------------------------
 //                  GAME
 //--------------------------------------------
-function game(gameID) {}
+function game(gameID, rishmsg) {
+    return new Promise((resolve, reject) => {
+        const text = 'SELECT * FROM games_test WHERE game_id = $1'
+        const values = [gameID]
+
+        pool.query(text, values, (err, result) => {
+            if(err) {
+                console.error('ERROR:', err.message)
+                resolve(`${err.message}. Ping an @**admin** if you need help!`)
+            } else {
+                if(result.rows[0] === undefined)
+                    rishmsg.setDescription(`We found **${user.username}**, but his code isn't in our books. Have them use \`${prefix}setcode\`!`)
+                else {
+                    rishmsg.setDescription(JSON.stringify(result.rows[0]))
+                }
+                resolve(rishmsg)
+            }
+        })
+    })
+}
 
 function games(options) {}
 
