@@ -12,7 +12,7 @@ const pool = new Pool({
 //--------------------------------------------
 function setcode(discordUser, code) {
     return new Promise((resolve, reject) => {
-        const verify = 'SELECT discord_id FROM players_test WHERE discord_id=$1'
+        const verify = 'SELECT discord_id FROM players WHERE discord_id=$1'
         const valverify = [discordUser.id];
 
         pool.query(verify, valverify, (err, res) => {
@@ -22,7 +22,7 @@ function setcode(discordUser, code) {
             } else {
                 console.log('Any record with that discord id?:', res.rowCount)
                 if (res.rowCount === 1) {
-                    const text = 'UPDATE players_test SET discord_name=$1, poly_code=$2 WHERE discord_id=$3'
+                    const text = 'UPDATE players SET discord_name=$1, poly_code=$2 WHERE discord_id=$3'
                     const values = [discordUser.username, code, discordUser.id]
                     pool.query(text, values, (err, result) => {
                         //console.log('result:', result)
@@ -40,7 +40,7 @@ function setcode(discordUser, code) {
                 } else if (res.rowCount > 1) {
                     resolve('More than one result? Ping an @**admin** to deal with this!')
                 } else { //if the entry doesn't exist, create it
-                    const text = 'INSERT INTO players_test (discord_id, discord_name, poly_code) VALUES($1, $2, $3) RETURNING *'
+                    const text = 'INSERT INTO players (discord_id, discord_name, poly_code) VALUES($1, $2, $3) RETURNING *'
                     const values = [discordUser.id, discordUser.username, code]
                     pool.query(text, values, (err, result) => {
                         if (err) {
@@ -66,7 +66,7 @@ function setcode(discordUser, code) {
 function code(user) {
     return new Promise((resolve, reject) => {
         let resolveMsg = [];
-        const text = 'SELECT poly_code FROM players_test WHERE discord_id = $1'
+        const text = 'SELECT poly_code FROM players WHERE discord_id = $1'
         const value = [user.id]
         pool.query(text, value, (err, result) => {
             if(err) {
@@ -95,8 +95,17 @@ function open(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesOngoing = Object.keys(modes.ongoing)
+        console.log("modesOngoing.length === 0:", modesOngoing.length === 0)
         thismode = modesOngoing.find(key => key.includes(gametype))
-        if (thismode === undefined) {
+        modesTesting = Object.keys(modes.testing)
+        testmode = modesTesting.find(key => key.includes(gametype))
+        if (modesOngoing.length === 0) {
+            resolveMsg.push(`No modes are available right now. To open a test game, use \`${prefix}test\`.`)
+        } else if (!gametype) {
+            resolveMsg.push(`You need to specify a game type you wanna the available modes are ${modesOngoing}.`)
+        } else if (testmode) {
+            resolveMsg.push("You tried to open that is being tested and not yet open to free play.")
+        } else if (thismode === undefined) {
             resolveMsg.push("You tried to open a game for a mode that doesn't exist *(yet?)*.")
         } else {
             /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
@@ -113,15 +122,25 @@ function open(hostUser, gametype) {
 function test(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
+        modesOngoing = Object.keys(modes.ongoing)
+        console.log("modesOngoing:", modesOngoing)
+        openmode = modesOngoing.find(key => key.includes(gametype))
         modesTesting = Object.keys(modes.testing)
         thismode = modesTesting.find(key => key.includes(gametype))
-        if (thismode === undefined) {
+        console.log("modesTesting:", modesTesting)
+        if (modesTesting.length === 0) {
+            resolveMsg.push(`No modes are under test right now.`)
+        } else if (!gametype) {
+            resolveMsg.push(`You need to specify a game type you wanna the available modes are **${modesTesting}**.`)
+        } else if (openmode) {
+            resolveMsg.push("You tried to open that is being tested and not yet open to free play.")
+        } else if (thismode === undefined) {
             resolveMsg.push("You tried to open a test game for a mode that doesn't exist (*yet*?).")
         } else {
             /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
             const values = [discordUser.id, discordUser.username, code]*/
 
-            resolveMsg.push(`We opened test game #1 for you for the **${gametype}** game mode.`)
+            resolveMsg.push(`We opened test game #1 for you for the **${thismode}** game mode.`)
         }
 
         resolve(resolveMsg)
