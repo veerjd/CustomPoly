@@ -95,7 +95,6 @@ function open(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesOngoing = Object.keys(modes.ongoing)
-        console.log("modesOngoing.length === 0:", modesOngoing.length === 0)
         thismode = modesOngoing.find(key => key.includes(gametype))
         modesTesting = Object.keys(modes.testing)
         testmode = modesTesting.find(key => key.includes(gametype))
@@ -123,11 +122,9 @@ function test(hostUser, gametype) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesOngoing = Object.keys(modes.ongoing)
-        console.log("modesOngoing:", modesOngoing)
         openmode = modesOngoing.find(key => key.includes(gametype))
         modesTesting = Object.keys(modes.testing)
         thismode = modesTesting.find(key => key.includes(gametype))
-        console.log("modesTesting:", modesTesting)
         if (modesTesting.length === 0) {
             resolveMsg.push(`No modes are under test right now.`)
         } else if (!gametype) {
