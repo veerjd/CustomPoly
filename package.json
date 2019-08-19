@@ -12,8 +12,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development npm-run-all server"
+    "start": "node index.js",
+    "test": "nodemon"
   },
   "repository": {
     "type": "git",

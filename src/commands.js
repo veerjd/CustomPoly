@@ -2,6 +2,7 @@ const { Pool } = require('pg')
 const connectionString = process.env.DATABASE_URL
 const prefix = process.env.PREFIX
 const modes = require('./modes')
+const display = require("./display")
 
 const pool = new Pool({
     connectionString: connectionString,
@@ -91,7 +92,8 @@ function setname() {}
 //--------------------------------------------
 //                  OPEN
 //--------------------------------------------
-function open(hostUser, gametype) {
+function open(hostUser, gametype, botname) {
+    console.log("botname:", botname)
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesOngoing = Object.keys(modes.ongoing)
@@ -107,8 +109,15 @@ function open(hostUser, gametype) {
         } else if (thismode === undefined) {
             resolveMsg.push("You tried to open a game for a mode that doesn't exist *(yet?)*.")
         } else {
-            /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
-            const values = [discordUser.id, discordUser.username, code]*/
+            if (botname === "[beta]CustomPoly")
+                text = 'INSERT INTO games_beta (host_id, allplayer_ids, is_test, gamemode) VALUES($1, $2, $3) RETURNING *'
+            else 
+                text = 'INSERT INTO games (host_id, allplayer_ids, is_test, gamemode) VALUES($1, $2, $3) RETURNING *'
+            values = [hostUser.username, ARRAY[hostUser], true, gametype]
+
+            console.log("text:", text)
+            console.log("values:", values)
+
             resolveMsg.push(`We opened game #1 for you for the **${gametype}** game mode.`)
         }
 
@@ -118,7 +127,7 @@ function open(hostUser, gametype) {
 //--------------------------------------------
 //                  TEST
 //--------------------------------------------
-function test(hostUser, gametype) {
+function test(hostUser, gametype, botname) {
     return new Promise((resolve, reject) => {
         resolveMsg = []
         modesOngoing = Object.keys(modes.ongoing)
@@ -134,8 +143,14 @@ function test(hostUser, gametype) {
         } else if (thismode === undefined) {
             resolveMsg.push("You tried to open a test game for a mode that doesn't exist (*yet*?).")
         } else {
-            /*const text = 'INSERT INTO games_test () VALUES($1, $2, $3) RETURNING *'
-            const values = [discordUser.id, discordUser.username, code]*/
+            if (botname === "[beta]CustomPoly")
+                text = 'INSERT INTO games_beta (host_id, allplayer_ids, is_test, gamemode) VALUES($1, $2, $3)'
+            else 
+                text = 'INSERT INTO games (host_id, allplayer_ids, is_test, gamemode) VALUES($1, $2, $3)'
+            values = [hostUser.id, [hostUser.id], true, thismode]
+
+            console.log("text:", text)
+            console.log("values:", values)
 
             resolveMsg.push(`We opened test game #1 for you for the **${thismode}** game mode.`)
         }
@@ -146,20 +161,32 @@ function test(hostUser, gametype) {
 //--------------------------------------------
 //                  GAME
 //--------------------------------------------
-function game(gameID, rishmsg) {
+function game(gameID, rishmsg, botname) {
     return new Promise((resolve, reject) => {
-        const text = 'SELECT * FROM games_test WHERE game_id = $1'
-        const values = [gameID]
+        if (botname === "[beta]CustomPoly") {
+            text = 'SELECT * FROM games_beta WHERE game_id = $1'
+        } else {
+            text = 'SELECT * FROM games WHERE game_id = $1'
+        }
+        values = [Number(gameID)]
+
+        console.log("text:", text)
+        console.log("values:", values)
 
         pool.query(text, values, (err, result) => {
             if(err) {
                 console.error('ERROR:', err.message)
                 resolve(`${err.message}. Ping an @**admin** if you need help!`)
             } else {
-                if(result.rows[0] === undefined)
-                    rishmsg.setDescription(`We found **${user.username}**, but his code isn't in our books. Have them use \`${prefix}setcode\`!`)
+                cGame = result.rows
+                if(cGame[0] === undefined)
+                    rishmsg.setTitle(`No games were found with that ID.`)
                 else {
-                    rishmsg.setDescription(JSON.stringify(result.rows[0]))
+                    if(cGame[0].is_test)
+                        rishmsg.setTitle(`**${cGame[0].gamemode.toUpperCase()}** Test Game ${cGame[0].game_id}`)
+                    else
+                        rishmsg.setTitle(`**Game ${cGame[0].game_id}**`)
+                    
                 }
                 resolve(rishmsg)
             }

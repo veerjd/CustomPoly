@@ -99,7 +99,7 @@ bot.on('message', message => {
 //                  OPEN
 //--------------------------------------------
     if (cmd === "open") {
-        open(message.author, args[0].toLowerCase())
+        open(message.author, args[0].toLowerCase(), bot.user.username)
             .then(x => {
                 console.log(x)
                 x.forEach(x => message.channel.send(x))
@@ -109,7 +109,7 @@ bot.on('message', message => {
 //                  TEST
 //--------------------------------------------
     if (cmd === "test") {
-        test(message.author, args[0].toLowerCase())
+        test(message.author, args[0].toLowerCase(), bot.user.username)
             .then(x => {
                 console.log(x)
                 x.forEach(x => message.channel.send(x))
@@ -120,7 +120,7 @@ bot.on('message', message => {
 //--------------------------------------------
     if (cmd === "game") {
         richmsg = new RichEmbed()
-        game(args[0].toLowerCase(), richmsg)
+        game(args[0].toLowerCase(), richmsg, bot.user.username)
             .then(x => {
                 console.log(x)
                 message.channel.send(x)
