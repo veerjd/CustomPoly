@@ -120,7 +120,7 @@ bot.on('message', message => {
 //--------------------------------------------
     if (cmd === "game") {
         richmsg = new RichEmbed()
-        game(args[0].toLowerCase(), richmsg, bot.user.username)
+        game(args[0].toLowerCase(), richmsg, bot.user.username, message.guild)
             .then(x => {
                 console.log(x)
                 message.channel.send(x)

@@ -161,7 +161,7 @@ function test(hostUser, gametype, botname) {
 //--------------------------------------------
 //                  GAME
 //--------------------------------------------
-function game(gameID, rishmsg, botname) {
+function game(gameID, richmsg, botname, guild) {
     return new Promise((resolve, reject) => {
         if (botname === "[beta]CustomPoly") {
             text = 'SELECT * FROM games_beta WHERE game_id = $1'
@@ -178,17 +178,20 @@ function game(gameID, rishmsg, botname) {
                 console.error('ERROR:', err.message)
                 resolve(`${err.message}. Ping an @**admin** if you need help!`)
             } else {
-                cGame = result.rows
-                if(cGame[0] === undefined)
-                    rishmsg.setTitle(`No games were found with that ID.`)
+                cGame = result.rows[0]
+                if(cGame === undefined)
+                    richmsg.setTitle(`No games were found with that ID.`)
                 else {
-                    if(cGame[0].is_test)
-                        rishmsg.setTitle(`**${cGame[0].gamemode.toUpperCase()}** Test Game ${cGame[0].game_id}`)
-                    else
-                        rishmsg.setTitle(`**Game ${cGame[0].game_id}**`)
-                    
+                    if(cGame.is_pending) //if not full
+                        richmsg = display.pending(richmsg,cGame,guild)
+                    else if (!cGame.is_pending && !cGame.is_completed) //if incomplete
+                        richmsg = display.incomplete(richmsg,cGame,guild)
+                    else if (cGame.is_completed && !cGame.is_confirmed) //if finished
+                        richmsg = display.completed(richmsg,cGame,guild)
+                    else if (cGame.is_confirmed) //if confirmed
+                        richmsg = display.confirmed(richmsg,cGame,guild)
                 }
-                resolve(rishmsg)
+                resolve(richmsg)
             }
         })
     })
