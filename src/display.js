@@ -20,6 +20,7 @@ module.exports.incomplete = function (rishmsg,cGame,guild) {
         richmsg.setTitle(`**${cGame.gamemode.toUpperCase()}** Game ${cGame.game_id}`)
 
     players = []
+    players[0] = `${cGame.game_name}\n`
     cGame.allplayers_ids.forEach((x, index) => {
         member = guild.members.get(x)
         players[index] = member.user.username
