@@ -81,7 +81,16 @@ bot.on('message', message => {
                 id = message.mentions.members.firstKey()
                 user = message.mentions.members.first().user
             } else {
-                member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                member = message.guild.members.find(x => { x.user.username.toLowerCase().includes(args[0].toLowerCase()) })
+                if(!member)
+                    member = message.guild.members.find(x => {
+                        console.log("x.nickname:", x.nickname)
+                        if(x.nickname)
+                            return x.nickname.toLowerCase().includes(args[0].toLowerCase())
+                        else
+                            return null
+                    })
+
                 if(member === null)
                     return message.channel.send(`We couldn't find player **${args[0]}** ¯\\\_(ツ)_/¯`)
                 else

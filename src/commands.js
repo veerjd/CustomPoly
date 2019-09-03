@@ -1,8 +1,6 @@
 const { Pool } = require('pg')
 const connectionString = process.env.DATABASE_URL
 const prefix = process.env.PREFIX
-const modes = require('./modes')
-const display = require("./display")
 
 const pool = new Pool({
     connectionString: connectionString,
@@ -72,7 +70,7 @@ function code(user) {
         pool.query(text, values, (err, result) => {
             if(err) {
                 console.error('ERROR:', err.message)
-                resolve(`${err.message}. Ping an @**admin** if you need help!`)
+                resolve([`${err.message}. Ping an @**admin** if you need help!`])
             } else {
                 if(result.rows[0] === undefined)
                     resolveMsg[0] = `We found **${user.username}**, but his code isn't in our books. Have them use \`${prefix}setcode\`!`
