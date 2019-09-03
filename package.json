@@ -7,6 +7,8 @@
     "discord.js": "11.5.1",
     "dotenv": "8.0.0",
     "express": "4.17.1",
+    "heroku": "7.27.1",
+    "lodash": "4.17.15",
     "npm-run-all": "4.1.5",
     "pg": "7.12.0"
   },

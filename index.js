@@ -1,8 +1,7 @@
 require('dotenv').config();
-const { Client, RichEmbed } = require('discord.js');
+const { Client } = require('discord.js');
 const bot = new Client();
-const https = require("https");
-const { setcode, code, setname, open, test, games, start, win, incomplete, complete, game, allgames, help } = require("./src/commands");
+const { setcode, code, help } = require("./src/commands");
 const { unallowedChannel, canDo } = require("./src/permissions")
 
 const express = require('express');
@@ -71,7 +70,7 @@ bot.on('message', message => {
 //                 CODE
 //--------------------------------------------
     if (cmd === "code") {
-        if(args[0] === '') {
+        if(args.length === 0) {
             code(message.author)
                 .then(x => {
                     console.log(x)
@@ -95,39 +94,7 @@ bot.on('message', message => {
                 })
         }
     }
-//--------------------------------------------
-//                  OPEN
-//--------------------------------------------
-    if (cmd === "open") {
-        open(message.author, args[0].toLowerCase(), bot.user.username)
-            .then(x => {
-                console.log(x)
-                x.forEach(x => message.channel.send(x))
-            })
-    }
-//--------------------------------------------
-//                  TEST
-//--------------------------------------------
-    if (cmd === "test") {
-        test(message.author, args[0].toLowerCase(), bot.user.username)
-            .then(x => {
-                console.log(x)
-                x.forEach(x => message.channel.send(x))
-            })
-    }
-//--------------------------------------------
-//                  GAME
-//--------------------------------------------
-    if (cmd === "game") {
-        richmsg = new RichEmbed()
-        game(args[0].toLowerCase(), richmsg, bot.user.username, message.guild)
-            .then(x => {
-                console.log(x)
-                message.channel.send(x)
-            })
-    }
 })
-
 //--------------------------------------
 //              END/OTHER
 //--------------------------------------
