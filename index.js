@@ -50,7 +50,10 @@ bot.on('message', message => {
                     if(message.mentions.members.first())
                         user = message.mentions.members.first().user
                     else {
-                        member = message.guild.members.find(x => x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                        member = message.guild.members.find(x => {
+                            console.log("x.user.username:",x.user.username,x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                            return x.user.username.toLowerCase().includes(args[0].toLowerCase())
+                        })
                         console.log("member:", member.user.username)
                         user = member.user
                     }
@@ -81,7 +84,10 @@ bot.on('message', message => {
                 id = message.mentions.members.firstKey()
                 user = message.mentions.members.first().user
             } else {
-                member = message.guild.members.find(x => { x.user.username.toLowerCase().includes(args[0].toLowerCase()) })
+                member = message.guild.members.find(x => { 
+                    console.log("x.user.username:",x.user.username,x.user.username.toLowerCase().includes(args[0].toLowerCase()))
+                    return x.user.username.toLowerCase().includes(args[0].toLowerCase())
+                })
                 if(!member)
                     member = message.guild.members.find(x => {
                         console.log("x.nickname:", x.nickname)
