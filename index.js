@@ -38,6 +38,13 @@ bot.on('message', message => {
 //                 SETCODE
 //--------------------------------------------
     if (cmd === "setcode") {
+        if(args[0] === '') {
+            return message.channel.send('You need to specify a code!')
+        }
+        if(args[0].length != 16) {
+            return message.channel.send(['Your code seems suspicious :thinking:.','If you\'re trying to specify someone else\'s code, don\'t forget to provide it!'])
+        }
+        
         if(args.length === 1) {
             setcode(message.author, args[0])
                 .then(x => {
@@ -73,7 +80,8 @@ bot.on('message', message => {
 //                 CODE
 //--------------------------------------------
     if (cmd === "code") {
-        if(args.length === 0) {
+        console.log(args.length, args[0])
+        if(args[0] === '') {
             code(message.author)
                 .then(x => {
                     console.log(x)
