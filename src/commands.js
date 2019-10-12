@@ -84,9 +84,43 @@ function code(user) {
     })
 }
 //--------------------------------------------
-//                 SETNAME
+//                  CHECK
 //--------------------------------------------
 
-function help(command) {}
+function check(members, guild) {
+    return new Promise((resolve, reject) => {
+        let resolveMsg = [];
+        const text = 'SELECT discord_id FROM players'
+        pool.query(text, (err, result) => {
+            if(err) {
+                console.error('ERROR:', err.message)
+                resolve([`${err.message}. Ping an @**admin** if you need help!`])
+            } else {
+                i = 0
+                dbIds = result.rows.map(function(item) {
+                    return item['discord_id'];
+                });
+                membersIds = members.map(function(item) {
+                    if(!item.user.bot)
+                        return item.user.id
+                })
+                filteredIds = membersIds.filter(x => !dbIds.includes(x) && x != undefined)
+                console.log("filteredIds:", filteredIds)
+            }
+            console.log("filteredIds.length:",filteredIds.length)
+            if(filteredIds.length === 0)
+                resolve(["I got all the codes!"])
+            else {
+                resolveMsg[0] = "Here's who's codes I'm missing:"
+                filteredIds.forEach((x, index) => {
+                    username = guild.members.get(x).user.username
+                    resolveMsg[index+1] = `**@${username}**`
+                })
+                resolve(resolveMsg)
+            }
+                
+        })
+    })
+}
 
-module.exports = { setcode, code, help }
+module.exports = { setcode, code, check }

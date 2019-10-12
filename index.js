@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const bot = new Client();
-const { setcode, code, help } = require("./src/commands");
+const { setcode, code, check } = require("./src/commands");
 const { unallowedChannel, canDo } = require("./src/permissions")
 
 const express = require('express');
@@ -116,6 +116,25 @@ bot.on('message', message => {
                     x.forEach(x => message.channel.send(x))
                 })
         }
+    }
+//--------------------------------------------
+//                  CHECK
+//--------------------------------------------
+    if (cmd === "check") {
+        canDo(message.member, message.channel.name)
+            .then(() => {
+                members = Array.from(message.guild.members.values())
+                members.filter(x => x.user.bot === false)
+                check(members, message.guild)
+                    .then(x => {
+                        console.log(x)
+                        x.forEach(x => message.channel.send(x))
+                    })
+            })
+            .catch(x => {
+                console.log(x)
+                message.channel.send(x)
+            })
     }
 })
 //--------------------------------------
