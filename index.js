@@ -41,7 +41,7 @@ bot.on('message', message => {
         if(args[0] === '') {
             return message.channel.send('You need to specify a code!')
         }
-        if(args[0].length != 16) {
+        if((args.length === 2 && args[1].length != 16) || (args.length === 1 && args[0].length != 16)) {
             return message.channel.send(['Your code seems suspicious :thinking:.','If you\'re trying to specify someone else\'s code, don\'t forget to provide it!'])
         }
         
